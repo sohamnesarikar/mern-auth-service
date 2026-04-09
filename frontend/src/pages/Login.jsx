@@ -13,7 +13,7 @@ const Login = () => {
   };
 
   return (
-    <div className="max-w-lg w-full bg-white rounded-lg px-8 py-12">
+    <div className="max-w-lg w-full bg-white rounded-lg px-10 py-12">
       <h1 className="text-center text-3xl font-bold mb-6">
         Login to your account
       </h1>
@@ -32,6 +32,11 @@ const Login = () => {
               },
             })}
           />
+          {errors?.email && (
+            <p className="text-red-500 mt-1 text-sm">
+              {errors?.email?.message}
+            </p>
+          )}
         </div>
 
         <div className="flex flex-col my-3">
@@ -50,6 +55,11 @@ const Login = () => {
               },
             })}
           />
+          {errors?.password && (
+            <p className="text-red-500 mt-1 text-sm">
+              {errors?.password?.message}
+            </p>
+          )}
         </div>
 
         <button
