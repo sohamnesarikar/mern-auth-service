@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import config from "./config/config.js";
+import { errorMiddleware } from "./middlewares/error.middleware.js";
+import userRoutes from "./routes/user.route.js";
 
 export const app = express();
 
@@ -13,3 +15,7 @@ app.use(
 );
 
 app.use(express.json());
+
+app.use("/api/v1/auth", userRoutes);
+
+app.use(errorMiddleware);
