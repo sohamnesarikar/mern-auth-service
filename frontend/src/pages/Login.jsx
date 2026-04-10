@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { Link } from "react-router";
 
 const Login = () => {
   const {
@@ -6,7 +7,6 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  console.log(errors);
 
   const onSubmit = (data) => {
     console.log(data);
@@ -69,7 +69,10 @@ const Login = () => {
           Login
         </button>
         <p className="text-gray-500 text-center mt-4">
-          Don't have an account? Register
+          Don't have an account?{" "}
+          <Link to="/register" className="text-indigo-600">
+            Register
+          </Link>
         </p>
       </form>
     </div>

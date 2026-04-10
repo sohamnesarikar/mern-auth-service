@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { Link } from "react-router";
 
 const Register = () => {
   const {
@@ -103,7 +104,10 @@ const Register = () => {
           Register
         </button>
         <p className="text-gray-500 text-center mt-4">
-          Already have an account? Login
+          Already have an account?{" "}
+          <Link to="/login" className="text-indigo-600">
+            Login
+          </Link>
         </p>
       </form>
     </div>

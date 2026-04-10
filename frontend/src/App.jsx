@@ -1,12 +1,16 @@
+import { Route, Routes } from "react-router";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import AuthLayout from "./layouts/AuthLayout";
 
 function App() {
   return (
-    <div className="w-full min-h-screen bg-linear-to-r from-violet-600 to-indigo-600 flex justify-center items-center">
-      <Login />
-      {/* <Register /> */}
-    </div>
+    <Routes>
+      <Route element={<AuthLayout />}>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Route>
+    </Routes>
   );
 }
 
