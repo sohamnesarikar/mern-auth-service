@@ -1,15 +1,28 @@
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
+import { toast } from "react-toastify";
+import { registerApi } from "../api/auth";
 
 const Register = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
+    try {
+      const res = await registerApi(data);
+
+      if (res.status === 201 && res.data?.success) {
+        toast.success(res.data?.message);
+        reset();
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
   };
 
   return (

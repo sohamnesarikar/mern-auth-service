@@ -27,3 +27,38 @@ export const register = asyncHandler(async (req, res, next) => {
     },
   });
 });
+
+export const login = asyncHandler(async (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    throw new ApiError(400, "Please fill all required fields");
+  }
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new ApiError(400, "Invalid email or password");
+  }
+
+  const isMatch = await user.comparePassword(password);
+
+  if (!isMatch) {
+    throw new ApiError(400, "Invalid email or password");
+  }
+
+  const token = user.generateToken(user._id);
+
+  res.cookie("accessToken", token, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+    maxAge: 1000 * 60 * 60 * 24, // 1 day
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Logged in successfuly",
+    token,
+  });
+});
