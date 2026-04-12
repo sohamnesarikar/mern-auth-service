@@ -1,12 +1,15 @@
 import { BrowserRouter } from "react-router";
 import { ToastContainer } from "react-toastify";
 import { createRoot } from "react-dom/client";
-import "./index.css";
+import { AuthProvider } from "./context/AuthContext.jsx";
 import App from "./App.jsx";
+import "./index.css";
 
 createRoot(document.getElementById("root")).render(
-  <BrowserRouter>
-    <App />
-    <ToastContainer />
-  </BrowserRouter>,
+  <AuthProvider>
+    <BrowserRouter>
+      <App />
+      <ToastContainer />
+    </BrowserRouter>
+  </AuthProvider>,
 );
