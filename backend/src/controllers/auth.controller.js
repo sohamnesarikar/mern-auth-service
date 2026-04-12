@@ -62,3 +62,23 @@ export const login = asyncHandler(async (req, res, next) => {
     token,
   });
 });
+
+export const logout = asyncHandler(async (req, res, next) => {
+  res.cookie("accessToken", null, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+    expires: new Date(Date.now()),
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Logged out successfuly",
+  });
+});
+
+export const getUserDetails = asyncHandler(async (req, res, next) => {
+  const user = req.user;
+
+  res.status(200).json({ success: true, data: user });
+});
