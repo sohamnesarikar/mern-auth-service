@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
-import { loginApi } from "../api/auth";
+import { Link, useNavigate } from "react-router";
+import { getUserApi, loginApi } from "../api/auth";
 import { toast } from "react-toastify";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const {
@@ -10,6 +11,8 @@ const Login = () => {
     reset,
     formState: { errors },
   } = useForm();
+  const navigate = useNavigate();
+  const { setUser } = useAuth();
 
   const onSubmit = async (data) => {
     try {
@@ -17,6 +20,12 @@ const Login = () => {
 
       if (res.status === 200 && res.data?.success) {
         toast.success(res.data?.message);
+
+        // fetch user
+        const userResponse = await getUserApi();
+        setUser(userResponse?.data?.user);
+
+        navigate("/");
         reset();
       }
     } catch (error) {

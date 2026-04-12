@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { registerApi } from "../api/auth";
 
@@ -10,15 +10,16 @@ const Register = () => {
     reset,
     formState: { errors },
   } = useForm();
+  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
-    console.log(data);
     try {
       const res = await registerApi(data);
 
       if (res.status === 201 && res.data?.success) {
         toast.success(res.data?.message);
         reset();
+        navigate("/login");
       }
     } catch (error) {
       toast.error(error?.response?.data?.message);

@@ -11,10 +11,12 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await getUserApi();
       if (res.status === 200 && res?.data?.success) {
-        setUser(res?.data?.data);
+        setUser(res?.data?.user);
       }
     } catch (error) {
-      toast.error(error?.response?.data?.message);
+      if (error?.response?.status !== 401) {
+        toast.error(error?.response?.data?.message);
+      }
       setUser(null);
     }
   };
@@ -24,7 +26,9 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, setUser }}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 
