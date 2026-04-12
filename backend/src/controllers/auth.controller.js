@@ -20,11 +20,6 @@ export const register = asyncHandler(async (req, res, next) => {
   res.status(201).json({
     success: true,
     message: "User Registered successfully",
-    data: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-    },
   });
 });
 
@@ -59,7 +54,6 @@ export const login = asyncHandler(async (req, res, next) => {
   res.status(200).json({
     success: true,
     message: "Logged in successfuly",
-    token,
   });
 });
 
@@ -78,7 +72,11 @@ export const logout = asyncHandler(async (req, res, next) => {
 });
 
 export const getUserDetails = asyncHandler(async (req, res, next) => {
-  const user = req.user;
+  const user = await User.findById(req.userId).select("-password");
 
-  res.status(200).json({ success: true, data: user });
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  res.status(200).json({ success: true, user });
 });
