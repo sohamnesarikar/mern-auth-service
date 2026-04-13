@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { logoutApi } from "../api/auth";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 import { toast } from "react-toastify";
 
 const Home = () => {
@@ -12,6 +12,7 @@ const Home = () => {
       const res = await logoutApi();
       if (res.status === 200 && res?.data?.success) {
         toast.success(res?.data?.message);
+        localStorage.removeItem("isLoggedIn");
         setUser(null);
         navigate("/login");
       }

@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { getUserApi, loginApi } from "../api/auth";
 import { toast } from "react-toastify";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
 const Login = () => {
   const {
@@ -20,6 +20,8 @@ const Login = () => {
 
       if (res.status === 200 && res.data?.success) {
         toast.success(res.data?.message);
+
+        localStorage.setItem("isLoggedIn", true);
 
         // fetch user
         const userResponse = await getUserApi();
