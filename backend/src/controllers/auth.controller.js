@@ -1,6 +1,8 @@
+import jwt from "jsonwebtoken";
 import { User } from "../models/user.model.js";
 import ApiError from "../utils/apiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import config from "../config/config.js";
 
 export const register = asyncHandler(async (req, res, next) => {
   const { name, email, mobile, password } = req.body;
@@ -42,13 +44,24 @@ export const login = asyncHandler(async (req, res, next) => {
     throw new ApiError(400, "Invalid email or password");
   }
 
-  const token = user.generateToken(user._id);
+  const accessToken = user.generateAccessToken(user._id);
+  const refreshToken = user.generateRefreshToken(user._id);
 
-  res.cookie("accessToken", token, {
+  user.refreshToken = refreshToken;
+  await user.save();
+
+  res.cookie("accessToken", accessToken, {
     httpOnly: true,
     secure: false,
     sameSite: "lax",
-    maxAge: 1000 * 60 * 60 * 24, // 1 day
+    maxAge: 1000 * 10, // 1 day
+  });
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+    maxAge: 1000 * 30,
   });
 
   res.status(200).json({
@@ -57,12 +70,53 @@ export const login = asyncHandler(async (req, res, next) => {
   });
 });
 
-export const logout = asyncHandler(async (req, res, next) => {
-  res.cookie("accessToken", null, {
+export const refreshAccessToken = asyncHandler(async (req, res, next) => {
+  const { refreshToken } = req.cookies;
+
+  if (!refreshToken) {
+    throw new ApiError(401, "Refresh Token missing");
+  }
+
+  const decoded = jwt.verify(refreshToken, config.REFRESH_SECRET);
+
+  const user = await User.findById(decoded.userId);
+
+  if (!user || user.refreshToken !== refreshToken) {
+    throw new ApiError(401, "Invalid or expired Refresh Token");
+  }
+
+  const newAccessToken = user.generateAccessToken(user._id);
+
+  res.cookie("accessToken", newAccessToken, {
     httpOnly: true,
     secure: false,
     sameSite: "lax",
-    expires: new Date(Date.now()),
+    maxAge: 10000,
+  });
+
+  res.status(200).json({ success: true, message: "Access token refreshed" });
+});
+
+export const logout = asyncHandler(async (req, res, next) => {
+  const { refreshToken } = req.cookies;
+
+  if (refreshToken) {
+    await User.findOneAndUpdate(
+      { refreshToken },
+      { $unset: { refreshToken: 1 } },
+    );
+  }
+
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+  });
+
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
   });
 
   res.status(200).json({

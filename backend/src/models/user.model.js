@@ -35,6 +35,8 @@ const userSchema = new mongoose.Schema(
       match:
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
     },
+
+    refreshToken: String,
   },
   { timestamps: true },
 );
@@ -50,8 +52,12 @@ userSchema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-userSchema.methods.generateToken = function (id) {
-  return jwt.sign({ userId: id }, config.JWT_SECRET, { expiresIn: "1d" });
+userSchema.methods.generateAccessToken = function (id) {
+  return jwt.sign({ userId: id }, config.ACCESS_SECRET, { expiresIn: "10s" });
+};
+
+userSchema.methods.generateRefreshToken = function (id) {
+  return jwt.sign({ userId: id }, config.REFRESH_SECRET, { expiresIn: "30s" });
 };
 
 export const User = mongoose.model("User", userSchema);
