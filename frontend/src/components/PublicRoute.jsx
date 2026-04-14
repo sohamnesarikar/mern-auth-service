@@ -3,9 +3,10 @@ import { useAuth } from "../context/useAuth";
 
 const PublicRoute = ({ children }) => {
   const { user } = useAuth();
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
 
-  if (user) {
-    return <Navigate to="/" />;
+  if (user && isLoggedIn) {
+    return <Navigate to="/dashboard" />;
   }
 
   return children;

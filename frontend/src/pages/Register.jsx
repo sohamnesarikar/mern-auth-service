@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { registerApi } from "../api/auth";
+import { IoMdArrowBack } from "react-icons/io";
 
 const Register = () => {
   const {
@@ -27,8 +28,17 @@ const Register = () => {
   };
 
   return (
-    <div className="max-w-lg w-full bg-white rounded-lg px-10 py-12">
-      <h1 className="text-center text-3xl font-bold mb-6">Create an account</h1>
+    <div className="max-w-lg w-full bg-white rounded-lg px-10 py-6">
+      <div
+        className="flex items-center gap-2 cursor-pointer"
+        onClick={() => navigate("/")}
+      >
+        <IoMdArrowBack size={"1.7em"} className="text-purple-600" />{" "}
+        <span className="text-md hover:underline text-purple-600">
+          Go back to home
+        </span>
+      </div>
+      <h1 className="text-center text-3xl font-bold my-6">Create an account</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col my-3">
           <label htmlFor="name">Full Name</label>

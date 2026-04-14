@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { IoMdArrowBack } from "react-icons/io";
 import { Link, useNavigate } from "react-router";
 import { getUserApi, loginApi } from "../api/auth";
 import { toast } from "react-toastify";
@@ -36,8 +37,17 @@ const Login = () => {
   };
 
   return (
-    <div className="max-w-lg w-full bg-white rounded-lg px-10 py-12">
-      <h1 className="text-center text-3xl font-bold mb-6">
+    <div className="max-w-lg w-full bg-white rounded-lg px-10 py-8">
+      <div
+        className="flex items-center gap-2 cursor-pointer"
+        onClick={() => navigate("/")}
+      >
+        <IoMdArrowBack size={"1.7em"} className="text-purple-600" />{" "}
+        <span className="text-md hover:underline text-purple-600">
+          Go back to home
+        </span>
+      </div>
+      <h1 className="text-center text-3xl font-bold my-6">
         Login to your account
       </h1>
       <form onSubmit={handleSubmit(onSubmit)}>

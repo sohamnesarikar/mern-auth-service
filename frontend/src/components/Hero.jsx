@@ -2,6 +2,7 @@ import { useNavigate } from "react-router";
 
 const Hero = () => {
   const navigate = useNavigate();
+
   return (
     <div className="w-full">
       <div className="max-w-7xl mx-auto p-4">
@@ -17,7 +18,7 @@ const Hero = () => {
           </p>
 
           <div className="mt-6">
-            <button className="bg-white text-indigo-600 px-6 py-2 rounded-lg font-semibold hover:scale-105 transition">
+            <button className="bg-white text-indigo-600 px-6 py-2 rounded-lg font-semibold hover:scale-105 transition" onClick={() => navigate('/register')}>
               Get Started
             </button>
           </div>
