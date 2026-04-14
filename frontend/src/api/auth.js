@@ -44,3 +44,12 @@ export const getUserApi = async () => {
     throw error;
   }
 };
+
+export const updateUserProfile = async (data) => {
+  try {
+    const res = axiosInstance.patch("/api/v1/auth/me/update", data);
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};

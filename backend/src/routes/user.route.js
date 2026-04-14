@@ -5,6 +5,7 @@ import {
   logout,
   refreshAccessToken,
   register,
+  updateUserProfile,
 } from "../controllers/auth.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
@@ -15,5 +16,6 @@ router.post("/login", login);
 router.get("/logout", logout);
 router.post("/refresh", refreshAccessToken);
 router.get("/me", authMiddleware, getUserDetails);
+router.patch("/me/update", authMiddleware, updateUserProfile);
 
 export default router;

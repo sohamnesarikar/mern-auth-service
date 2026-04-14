@@ -134,3 +134,25 @@ export const getUserDetails = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({ success: true, user });
 });
+
+export const updateUserProfile = asyncHandler(async (req, res, next) => {
+  const { name, email, mobile } = req.body;
+
+  if (!name || !email || !mobile) {
+    throw new ApiError(400, "Please fill all required fields");
+  }
+
+  const newData = { name, email, mobile };
+
+  const user = await User.findOneAndUpdate(
+    { email },
+    { $set: newData },
+    { returnDocument: "after" },
+  ).select("-password");
+
+  res.status(200).json({
+    success: true,
+    message: "Profile updated successfully",
+    user,
+  });
+});
