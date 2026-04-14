@@ -54,14 +54,14 @@ export const login = asyncHandler(async (req, res, next) => {
     httpOnly: true,
     secure: false,
     sameSite: "lax",
-    maxAge: 1000 * 10, // 1 day
+    maxAge: 1000 * 60 * 60 * 1, // 1 hour
   });
 
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: false,
     sameSite: "lax",
-    maxAge: 1000 * 30,
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
   });
 
   res.status(200).json({
@@ -91,7 +91,7 @@ export const refreshAccessToken = asyncHandler(async (req, res, next) => {
     httpOnly: true,
     secure: false,
     sameSite: "lax",
-    maxAge: 10000,
+    maxAge: 1000 * 60 * 60 * 1, // 1 hour
   });
 
   res.status(200).json({ success: true, message: "Access token refreshed" });

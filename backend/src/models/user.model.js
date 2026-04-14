@@ -53,11 +53,11 @@ userSchema.methods.comparePassword = async function (password) {
 };
 
 userSchema.methods.generateAccessToken = function (id) {
-  return jwt.sign({ userId: id }, config.ACCESS_SECRET, { expiresIn: "10s" });
+  return jwt.sign({ userId: id }, config.ACCESS_SECRET, { expiresIn: "1h" });
 };
 
 userSchema.methods.generateRefreshToken = function (id) {
-  return jwt.sign({ userId: id }, config.REFRESH_SECRET, { expiresIn: "30s" });
+  return jwt.sign({ userId: id }, config.REFRESH_SECRET, { expiresIn: "7d" });
 };
 
 export const User = mongoose.model("User", userSchema);
