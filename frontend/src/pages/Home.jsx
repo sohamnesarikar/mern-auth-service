@@ -1,15 +1,18 @@
-import { useAuth } from "../context/useAuth";
+import Features from "../components/Features";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
+import Hero from "../components/Hero";
 
 const Home = () => {
-  const { user } = useAuth();
-
   return (
-    <>
-      <h2 className="text-3xl font-semibold">Welcome Back, {user?.name} 👋</h2>
-      <p className="mt-4 text-lg opacity-90">
-        Your account is secure and ready to use.
-      </p>
-    </>
+    <div className="w-full min-h-screen flex flex-col bg-linear-to-r from-violet-600 to-indigo-600 text-white">
+      <Header />
+      <div className="grow">
+        <Hero />
+        <Features />
+      </div>
+      <Footer />
+    </div>
   );
 };
 

@@ -27,7 +27,7 @@ const AppLayout = () => {
         <nav className="flex justify-between items-center">
           <h1
             className="text-3xl font-bold text-violet-500 cursor-pointer"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/dashboard")}
           >
             MernAuth
           </h1>

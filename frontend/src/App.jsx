@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import Profile from "./pages/Profile";
 import AppLayout from "./layouts/AppLayout";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
@@ -30,12 +31,21 @@ function App() {
         />
       </Route>
 
+      <Route
+        path="/"
+        element={
+          <PublicRoute>
+            <Home />
+          </PublicRoute>
+        }
+      />
+
       <Route element={<AppLayout />}>
         <Route
-          path="/"
+          path="/dashboard"
           element={
             <ProtectedRoute>
-              <Home />
+              <Dashboard />
             </ProtectedRoute>
           }
         />

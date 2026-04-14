@@ -27,7 +27,7 @@ const Login = () => {
         const userResponse = await getUserApi();
         setUser(userResponse?.data?.user);
 
-        navigate("/");
+        navigate("/dashboard");
         reset();
       }
     } catch (error) {
