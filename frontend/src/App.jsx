@@ -8,6 +8,7 @@ import PublicRoute from "./components/PublicRoute";
 import Profile from "./pages/Profile";
 import AppLayout from "./layouts/AppLayout";
 import Dashboard from "./pages/Dashboard";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
   return (
@@ -21,11 +22,21 @@ function App() {
             </PublicRoute>
           }
         />
+
         <Route
           path="/register"
           element={
             <PublicRoute>
               <Register />
+            </PublicRoute>
+          }
+        />
+
+        <Route
+          path="/forgot-password"
+          element={
+            <PublicRoute>
+              <ForgotPassword />
             </PublicRoute>
           }
         />

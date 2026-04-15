@@ -95,6 +95,12 @@ const Login = () => {
           )}
         </div>
 
+        <div className="w-full text-right">
+          <Link to={"/forgot-password"} className="text-indigo-500">
+            Forgot Password
+          </Link>
+        </div>
+
         <button
           type="submit"
           className="bg-linear-to-r from-violet-600 to-indigo-600 text-white w-full py-3 text-lg font-bold mt-3 rounded-md shadow-md cursor-pointer"
