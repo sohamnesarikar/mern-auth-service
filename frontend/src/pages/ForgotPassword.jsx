@@ -2,9 +2,12 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoMdArrowBack } from "react-icons/io";
 import { useNavigate } from "react-router";
+import { resetPassword, sendOtp, verifyOtp } from "../api/auth";
+import { toast } from "react-toastify";
 
 const ForgotPassword = () => {
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(1);
+  const [email, setEmail] = useState("");
   const navigate = useNavigate();
   const {
     register: emailRegister,
@@ -27,11 +30,46 @@ const ForgotPassword = () => {
 
   const password = watch("newPassword");
 
-  function onSendOtp(data) {}
+  async function onSendOtp(data) {
+    setEmail(data?.email);
+    try {
+      const res = await sendOtp(data);
+      console.log(res);
+      if (res.status === 200 && res?.data?.success) {
+        toast.success(res?.data?.message);
+        setStep(2);
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  }
 
-  function onVerifyOtp(data) {}
+  async function onVerifyOtp(data) {
+    try {
+      const res = await verifyOtp({ email, ...data });
 
-  function onResetPassword(data) {}
+      if (res.status === 200 && res?.data?.success) {
+        toast.success(res?.data?.message);
+        setStep(3);
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  }
+
+  async function onResetPassword(data) {
+    try {
+      const res = await resetPassword({ email, ...data });
+
+      if (res.status === 200 && res?.data?.success) {
+        toast.success(res?.data?.message);
+        setStep(1);
+        navigate("/login");
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  }
 
   return (
     <div className="max-w-lg w-full bg-white rounded-lg px-10 py-10">
@@ -84,7 +122,7 @@ const ForgotPassword = () => {
               className="p-2 border border-gray-300 rounded-md mt-1"
               id="otp"
               {...otpRegister("otp", {
-                required: "Otp is required",
+                required: "otp is required",
                 pattern: {
                   value: /^\d{6}$/,
                   message: "Invalid otp",

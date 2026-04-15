@@ -32,11 +32,22 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      match:
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
     },
 
     refreshToken: String,
+
+    resetPasswordOtp: {
+      type: String,
+    },
+
+    isOtpVerified: {
+      type: Boolean,
+      default: false,
+    },
+
+    resetPasswordOtpExpiry: {
+      type: Date,
+    },
   },
   { timestamps: true },
 );

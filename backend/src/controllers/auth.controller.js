@@ -3,6 +3,8 @@ import { User } from "../models/user.model.js";
 import ApiError from "../utils/apiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import config from "../config/config.js";
+import { getOtpEmailTemplate } from "../utils/getOtpEmailTemplate.js";
+import { sendMail } from "../utils/mail.js";
 
 export const register = asyncHandler(async (req, res, next) => {
   const { name, email, mobile, password } = req.body;
@@ -155,4 +157,76 @@ export const updateUserProfile = asyncHandler(async (req, res, next) => {
     message: "Profile updated successfully",
     user,
   });
+});
+
+export const sendOtp = asyncHandler(async (req, res, next) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new ApiError(400, "User does not exist");
+  }
+
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  const otpExpiry = Date.now() + 1000 * 60 * 5;
+
+  user.resetPasswordOtp = otp;
+  user.resetPasswordOtpExpiry = otpExpiry;
+  await user.save();
+
+  const html = getOtpEmailTemplate(otp);
+
+  await sendMail(user.email, "Reset Password", html);
+
+  res.status(200).json({ success: true, message: "otp sent to email" });
+});
+
+export const verifyOtp = asyncHandler(async (req, res, next) => {
+  const { email, otp } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (
+    !user ||
+    otp !== user.resetPasswordOtp ||
+    Date.now() > user.resetPasswordOtpExpiry
+  ) {
+    throw new ApiError(400, "Otp is invalid or expired");
+  }
+
+  user.isOtpVerified = true;
+  user.resetPasswordOtp = null;
+  user.resetPasswordOtpExpiry = null;
+
+  await user.save();
+
+  res.status(200).json({ success: true, message: "otp verify successfully" });
+});
+
+export const resetPassword = asyncHandler(async (req, res, next) => {
+  const { email, newPassword, confirmPassword } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new ApiError(400, "User does not exist");
+  }
+
+  if (!user.isOtpVerified) {
+    throw new ApiError(400, "otp verification required");
+  }
+
+  if (newPassword !== confirmPassword) {
+    throw new ApiError(400, "password do not match");
+  }
+
+  user.password = newPassword;
+  user.isOtpVerified = false;
+
+  await user.save();
+
+  res
+    .status(200)
+    .json({ success: true, message: "Password reset successfully" });
 });

@@ -1,7 +1,8 @@
 import { Outlet, useNavigate } from "react-router";
+import { AiOutlineLogout } from "react-icons/ai";
+import { toast } from "react-toastify";
 import { logoutApi } from "../api/auth";
 import { useAuth } from "../context/useAuth";
-import { toast } from "react-toastify";
 
 const AppLayout = () => {
   const { setUser } = useAuth();
@@ -37,18 +38,17 @@ const AppLayout = () => {
               <img
                 src="https://randomuser.me/api/portraits/men/60.jpg"
                 alt="profile image"
-                className="object-cover rounded-full border border-indigo-700 shadow-lg cursor-pointer animate-bounce delay-500"
+                className="object-cover rounded-full border border-indigo-700 shadow-lg cursor-pointer hover:scale-105"
                 onClick={() => {
                   navigate("/profile");
                 }}
               />
             </div>
-            <button
+            <AiOutlineLogout
               className="hover:text-purple-500 text-lg cursor-pointer"
+              size={25}
               onClick={logoutHandler}
-            >
-              Logout
-            </button>
+            />
           </div>
         </nav>
       </header>

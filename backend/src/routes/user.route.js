@@ -5,7 +5,10 @@ import {
   logout,
   refreshAccessToken,
   register,
+  resetPassword,
+  sendOtp,
   updateUserProfile,
+  verifyOtp,
 } from "../controllers/auth.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 
@@ -15,6 +18,11 @@ router.post("/register", register);
 router.post("/login", login);
 router.get("/logout", logout);
 router.post("/refresh", refreshAccessToken);
+
+router.post("/send-otp", sendOtp);
+router.post("/verify-otp", verifyOtp);
+router.post("/reset-password", resetPassword);
+
 router.get("/me", authMiddleware, getUserDetails);
 router.patch("/me/update", authMiddleware, updateUserProfile);
 

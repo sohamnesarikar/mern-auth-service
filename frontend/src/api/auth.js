@@ -53,3 +53,30 @@ export const updateUserProfile = async (data) => {
     throw error;
   }
 };
+
+export const sendOtp = async (data) => {
+  try {
+    const res = await axiosInstance.post("/api/v1/auth/send-otp", data);
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const verifyOtp = async (data) => {
+  try {
+    const res = await axiosInstance.post("/api/v1/auth/verify-otp", data);
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const resetPassword = async (data) => {
+  try {
+    const res = await axiosInstance.post("/api/v1/auth/reset-password", data);
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
