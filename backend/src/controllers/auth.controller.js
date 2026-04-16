@@ -9,15 +9,20 @@ import { uploadToCloudinary } from "../utils/cloudinary.js";
 
 export const register = asyncHandler(async (req, res, next) => {
   const { name, email, mobile, password } = req.body;
+  let result = "";
 
   if (!name || !email || !mobile || !password) {
     throw new ApiError(400, "Please fill all required fields");
   }
 
   if (req.file) {
-    const result = await uploadToCloudinary(req.file.buffer);
-    console.log("result", result);
+    result = await uploadToCloudinary(req.file.buffer);
   }
+
+  const avatar = {
+    imageUrl: result.secure_url,
+    publicId: result.public_id,
+  };
 
   const existingUser = await User.findOne({ email });
 
@@ -25,7 +30,7 @@ export const register = asyncHandler(async (req, res, next) => {
     throw new ApiError(400, "User already exists");
   }
 
-  const user = await User.create({ name, email, mobile, password });
+  const user = await User.create({ avatar, name, email, mobile, password });
 
   res.status(201).json({
     success: true,
@@ -235,4 +240,35 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
   res
     .status(200)
     .json({ success: true, message: "Password reset successfully" });
+});
+
+export const updateAvatar = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.userId);
+  let result = "";
+
+  if (!user) {
+    if (!user) {
+      throw new ApiError(400, "User does not exist");
+    }
+  }
+
+  if (req.file) {
+    result = await uploadToCloudinary(req.file.buffer);
+  }
+
+  const avatar = {
+    imageUrl: result.secure_url,
+    publicId: result.public_id,
+  };
+
+  user.avatar = avatar;
+  await user.save();
+
+  res
+    .status(200)
+    .json({
+      success: true,
+      message: "Profile picture updated successfully",
+      avatar: user?.avatar,
+    });
 });

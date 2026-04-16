@@ -5,7 +5,7 @@ import { logoutApi } from "../api/auth";
 import { useAuth } from "../context/useAuth";
 
 const AppLayout = () => {
-  const { setUser } = useAuth();
+  const { user, setUser } = useAuth();
   const navigate = useNavigate();
 
   const logoutHandler = async () => {
@@ -36,7 +36,7 @@ const AppLayout = () => {
           <div className="flex items-center gap-6">
             <div className="w-12 h-12">
               <img
-                src="https://randomuser.me/api/portraits/men/60.jpg"
+                src={user?.avatar?.imageUrl || "./profile-picture.jpg"}
                 alt="profile image"
                 className="object-cover rounded-full border border-indigo-700 shadow-lg cursor-pointer hover:scale-105"
                 onClick={() => {

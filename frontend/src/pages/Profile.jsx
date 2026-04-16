@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/useAuth";
 import { useForm } from "react-hook-form";
-import { updateUserProfile } from "../api/auth";
+import { updateProfilePicture, updateUserProfile } from "../api/auth";
 import { toast } from "react-toastify";
+import { IoCameraSharp } from "react-icons/io5";
 
 const Profile = () => {
   const { user, setUser } = useAuth();
@@ -41,15 +42,43 @@ const Profile = () => {
     }
   };
 
+  const handleProfileImage = async (e) => {
+    const file = e.target.files[0];
+
+    const formData = new FormData();
+    formData.append("avatar", file);
+
+    try {
+      const res = await updateProfilePicture(formData);
+      if (res.status === 200 && res.data?.success) {
+        setUser({ ...user, avatar: res?.data?.avatar });
+        toast.success("User profile update successfully");
+      }
+    } catch (error) {
+      toast.error("Profile picture update failed");
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="flex gap-18">
-        <div className="w-75 h-75">
+        <div className="relative w-75 h-75">
           <img
-            src="https://randomuser.me/api/portraits/men/60.jpg"
+            src={user?.avatar?.imageUrl || "./profile-picture.jpg"}
             alt="profile image"
             className="w-full object-cover rounded-full"
           />
+
+          <label className="absolute bottom-6 right-6 bg-indigo-500 rounded-full p-2 cursor-pointer">
+            <input
+              type="file"
+              accept="image/*"
+              {...register("avatar")}
+              onChange={handleProfileImage}
+              className="hidden"
+            />
+            <IoCameraSharp size={25} className="text-white" />
+          </label>
         </div>
 
         <div className="space-y-7 mt-4">

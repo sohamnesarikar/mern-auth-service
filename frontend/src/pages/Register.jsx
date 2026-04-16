@@ -1,10 +1,14 @@
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
+import { IoCameraSharp } from "react-icons/io5";
 import { toast } from "react-toastify";
 import { registerApi } from "../api/auth";
 import { IoMdArrowBack } from "react-icons/io";
 
 const Register = () => {
+  const [preview, setPreview] = useState(null);
+  const [file, setFile] = useState(null);
   const {
     register,
     handleSubmit,
@@ -13,9 +17,24 @@ const Register = () => {
   } = useForm();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    return () => {
+      if (preview) {
+        URL.revokeObjectURL(preview);
+      }
+    };
+  }, [preview]);
+
   const onSubmit = async (data) => {
+    const formData = new FormData();
+    formData.append("name", data?.name);
+    formData.append("email", data?.email);
+    formData.append("mobile", data?.mobile);
+    formData.append("password", data?.password);
+    formData.append("avatar", file);
+
     try {
-      const res = await registerApi(data);
+      const res = await registerApi(formData);
 
       if (res.status === 201 && res.data?.success) {
         toast.success(res.data?.message);
@@ -24,6 +43,15 @@ const Register = () => {
       }
     } catch (error) {
       toast.error(error?.response?.data?.message);
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+      setFile(file);
     }
   };
 
@@ -40,6 +68,25 @@ const Register = () => {
       </div>
       <h1 className="text-center text-3xl font-bold my-6">Create an account</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="relative w-32 h-32 my-3 mx-auto">
+          <img
+            src={preview || "/profile-picture.jpg"}
+            alt="avatar"
+            className="w-full rounded-full object-cover border"
+          />
+
+          <label className="absolute bottom-1 right-1 bg-indigo-600 p-1.5 rounded-full cursor-pointer">
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              {...register("avatar")}
+              onChange={handleFileChange}
+            />
+            <IoCameraSharp size={25} className="text-white" />
+          </label>
+        </div>
+
         <div className="flex flex-col my-3">
           <label htmlFor="name">Full Name</label>
           <input

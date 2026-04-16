@@ -7,6 +7,7 @@ import {
   register,
   resetPassword,
   sendOtp,
+  updateAvatar,
   updateUserProfile,
   verifyOtp,
 } from "../controllers/auth.controller.js";
@@ -26,5 +27,11 @@ router.post("/reset-password", resetPassword);
 
 router.get("/me", authMiddleware, getUserDetails);
 router.patch("/me/update", authMiddleware, updateUserProfile);
+router.patch(
+  "/me/update/avatar",
+  authMiddleware,
+  upload.single("avatar"),
+  updateAvatar,
+);
 
 export default router;

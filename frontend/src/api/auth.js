@@ -80,3 +80,15 @@ export const resetPassword = async (data) => {
     throw error;
   }
 };
+
+export const updateProfilePicture = async (data) => {
+  try {
+    const res = await axiosInstance.patch(
+      "/api/v1/auth/me/update/avatar",
+      data,
+    );
+    return res;
+  } catch (error) {
+    throw error;
+  }
+};
