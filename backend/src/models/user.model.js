@@ -34,6 +34,11 @@ const userSchema = new mongoose.Schema(
       trim: true,
     },
 
+    avatar: {
+      imageUrl: String,
+      publicId: String,
+    },
+
     refreshToken: String,
 
     resetPasswordOtp: {

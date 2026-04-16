@@ -12,6 +12,9 @@ const envConfig = {
   NODEMAILER_PORT: process.env.NODEMAILER_PORT,
   NODEMAILER_USER: process.env.NODEMAILER_USER,
   NODEMAILER_PASS: process.env.NODEMAILER_PASS,
+  CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
+  CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
 };
 
 const config = Object.freeze(envConfig);

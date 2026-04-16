@@ -5,12 +5,18 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import config from "../config/config.js";
 import { getOtpEmailTemplate } from "../utils/getOtpEmailTemplate.js";
 import { sendMail } from "../utils/mail.js";
+import { uploadToCloudinary } from "../utils/cloudinary.js";
 
 export const register = asyncHandler(async (req, res, next) => {
   const { name, email, mobile, password } = req.body;
 
   if (!name || !email || !mobile || !password) {
     throw new ApiError(400, "Please fill all required fields");
+  }
+
+  if (req.file) {
+    const result = await uploadToCloudinary(req.file.buffer);
+    console.log("result", result);
   }
 
   const existingUser = await User.findOne({ email });

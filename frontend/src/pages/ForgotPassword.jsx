@@ -34,7 +34,7 @@ const ForgotPassword = () => {
     setEmail(data?.email);
     try {
       const res = await sendOtp(data);
-      console.log(res);
+
       if (res.status === 200 && res?.data?.success) {
         toast.success(res?.data?.message);
         setStep(2);
@@ -64,6 +64,7 @@ const ForgotPassword = () => {
       if (res.status === 200 && res?.data?.success) {
         toast.success(res?.data?.message);
         setStep(1);
+        setEmail("");
         navigate("/login");
       }
     } catch (error) {
