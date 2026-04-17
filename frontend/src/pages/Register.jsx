@@ -5,10 +5,12 @@ import { IoCameraSharp } from "react-icons/io5";
 import { toast } from "react-toastify";
 import { registerApi } from "../api/auth";
 import { IoMdArrowBack } from "react-icons/io";
+import Spinner from "../components/Spinner";
 
 const Register = () => {
   const [preview, setPreview] = useState(null);
   const [file, setFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -34,6 +36,7 @@ const Register = () => {
     formData.append("avatar", file);
 
     try {
+      setIsLoading(true);
       const res = await registerApi(formData);
 
       if (res.status === 201 && res.data?.success) {
@@ -43,6 +46,8 @@ const Register = () => {
       }
     } catch (error) {
       toast.error(error?.response?.data?.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -56,17 +61,18 @@ const Register = () => {
   };
 
   return (
-    <div className="max-w-lg w-full bg-white rounded-lg px-10 py-6">
-      <div
-        className="flex items-center gap-2 cursor-pointer"
-        onClick={() => navigate("/")}
-      >
-        <IoMdArrowBack size={"1.7em"} className="text-purple-600" />{" "}
-        <span className="text-md hover:underline text-purple-600">
-          Go back to home
-        </span>
+    <div className="max-w-lg w-full bg-white rounded-lg px-10 py-10">
+      <div className="flex items-center gap-4 mb-6">
+        <IoMdArrowBack
+          size={30}
+          className="text-purple-600 cursor-pointer"
+          onClick={() => navigate("/")}
+        />{" "}
+        <h1 className="text-3xl font-bold text-indigo-600">
+          Create an account
+        </h1>
       </div>
-      <h1 className="text-center text-3xl font-bold my-6">Create an account</h1>
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="relative w-32 h-32 my-3 mx-auto">
           <img
@@ -170,9 +176,17 @@ const Register = () => {
 
         <button
           type="submit"
-          className="bg-linear-to-r from-violet-600 to-indigo-600 text-white w-full py-3 text-lg font-bold mt-3 rounded-md shadow-md cursor-pointer"
+          disabled={isLoading}
+          className="bg-linear-to-r from-violet-600 to-indigo-600 text-white w-full py-3 text-lg font-bold mt-3 rounded-md shadow-md cursor-pointer flex justify-center items-center gap-2 disabled:opacity-70"
         >
-          Register
+          {isLoading ? (
+            <>
+              <Spinner />
+              "Registering..."
+            </>
+          ) : (
+            "Register"
+          )}
         </button>
         <p className="text-gray-500 text-center mt-4">
           Already have an account?{" "}

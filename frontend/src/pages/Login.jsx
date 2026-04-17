@@ -1,11 +1,14 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { IoMdArrowBack } from "react-icons/io";
 import { Link, useNavigate } from "react-router";
 import { getUserApi, loginApi } from "../api/auth";
 import { toast } from "react-toastify";
 import { useAuth } from "../context/useAuth";
+import Spinner from "../components/Spinner";
 
 const Login = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const {
     register,
     handleSubmit,
@@ -17,6 +20,7 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     try {
+      setIsLoading(true);
       const res = await loginApi(data);
 
       if (res.status === 200 && res.data?.success) {
@@ -33,23 +37,24 @@ const Login = () => {
       }
     } catch (error) {
       toast.error(error?.response?.data?.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="max-w-lg w-full bg-white rounded-lg px-10 py-8">
-      <div
-        className="flex items-center gap-2 cursor-pointer"
-        onClick={() => navigate("/")}
-      >
-        <IoMdArrowBack size={"1.7em"} className="text-purple-600" />{" "}
-        <span className="text-md hover:underline text-purple-600">
-          Go back to home
-        </span>
+    <div className="max-w-lg w-full bg-white rounded-lg px-10 py-10">
+      <div className="flex items-center gap-4 mb-6">
+        <IoMdArrowBack
+          size={30}
+          className="text-purple-600 cursor-pointer"
+          onClick={() => navigate("/")}
+        />{" "}
+        <h1 className="text-3xl font-bold text-indigo-600">
+          Login to your account
+        </h1>
       </div>
-      <h1 className="text-center text-3xl font-bold my-6">
-        Login to your account
-      </h1>
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col my-3">
           <label htmlFor="email">Email</label>
@@ -103,9 +108,17 @@ const Login = () => {
 
         <button
           type="submit"
-          className="bg-linear-to-r from-violet-600 to-indigo-600 text-white w-full py-3 text-lg font-bold mt-3 rounded-md shadow-md cursor-pointer"
+          disabled={isLoading}
+          className="bg-linear-to-r from-violet-600 to-indigo-600 text-white w-full py-3 text-lg font-bold mt-3 rounded-md shadow-md cursor-pointer flex justify-center items-center gap-2 disabled:opacity-70"
         >
-          Login
+          {isLoading ? (
+            <>
+              <Spinner />
+              "Logging in..."
+            </>
+          ) : (
+            "Login"
+          )}
         </button>
         <p className="text-gray-500 text-center mt-4">
           Don't have an account?{" "}

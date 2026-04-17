@@ -4,10 +4,12 @@ import { useForm } from "react-hook-form";
 import { updateProfilePicture, updateUserProfile } from "../api/auth";
 import { toast } from "react-toastify";
 import { IoCameraSharp } from "react-icons/io5";
+import Spinner from "../components/Spinner";
 
 const Profile = () => {
   const { user, setUser } = useAuth();
   const [isEdit, setIsEdit] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { register, handleSubmit, reset } = useForm();
 
   useEffect(() => {
@@ -31,6 +33,7 @@ const Profile = () => {
 
   const onSubmit = async (data) => {
     try {
+      setIsLoading(true);
       const res = await updateUserProfile(data);
       if (res.status === 200 && res.data?.success) {
         setUser(res?.data?.user);
@@ -39,6 +42,8 @@ const Profile = () => {
       }
     } catch (error) {
       toast.error("User profile update failed");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -123,12 +128,22 @@ const Profile = () => {
 
           {isEdit ? (
             <div className="flex  gap-8">
-              <button className="bg-linear-to-r from-green-700 to-green-600 text-white  py-2 px-6 w-fit text-lg font-bold mt-3 rounded-md shadow-md cursor-pointer">
-                Save
+              <button
+                disabled={isLoading}
+                className="bg-linear-to-r from-green-700 to-green-600 text-white py-2 px-6 w-fit text-lg font-bold mt-3 rounded-md shadow-md cursor-pointer flex justify-center items-center gap-2 disabled:opacity-70"
+              >
+                {isLoading ? (
+                  <>
+                    <Spinner />
+                    'Saving...'
+                  </>
+                ) : (
+                  "Save"
+                )}
               </button>
               <button
                 onClick={handleCancel}
-                className="bg-linear-to-r from-red-700 to-red-600 text-white  py-2 px-6 w-fit text-lg font-bold mt-3 rounded-md shadow-md cursor-pointer"
+                className="bg-linear-to-r from-red-700 to-red-600 text-white py-2 px-6 w-fit text-lg font-bold mt-3 rounded-md shadow-md cursor-pointer"
               >
                 Cancel
               </button>
@@ -136,7 +151,7 @@ const Profile = () => {
           ) : (
             <button
               onClick={() => setIsEdit(true)}
-              className="bg-linear-to-r from-violet-600 to-indigo-600 text-white  py-2 px-6 w-fit text-lg font-bold mt-3 rounded-md shadow-md cursor-pointer"
+              className="bg-linear-to-r from-violet-600 to-indigo-600 text-white py-2 px-6 w-fit text-lg font-bold mt-3 rounded-md shadow-md cursor-pointer"
             >
               Edit
             </button>

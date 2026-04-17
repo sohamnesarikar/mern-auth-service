@@ -74,10 +74,10 @@ const ForgotPassword = () => {
 
   return (
     <div className="max-w-lg w-full bg-white rounded-lg px-10 py-10">
-      <div className="flex items-center gap-4 cursor-pointer mb-4">
+      <div className="flex items-center gap-4 mb-6">
         <IoMdArrowBack
           size={30}
-          className="text-purple-600"
+          className="text-purple-600 cursor-pointer"
           onClick={() => navigate("/login")}
         />{" "}
         <h1 className="text-3xl font-bold text-indigo-600">Forgot Password</h1>
